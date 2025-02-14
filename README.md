@@ -5,7 +5,7 @@
 
 This project contains AWS setup for Electrical Energy Consumption Monitoring System.
 Infrastructure setup is defined with Terraform (IaaS).
-The system serves to receive data on the consumption of electricity from customers.
+The system is used to receive data on electrical energy consumption from customers, prepare data for analysis and raise alarms in the event of incorrect customer consumption reporting.
 Storing of data is done by Java Spring Boot Application running by Fargate: https://github.com/lmarketin/ElectricalEnergyConsuptionMonitoringService
 
 System Architecture characteristics:
