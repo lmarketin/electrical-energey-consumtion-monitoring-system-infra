@@ -7,5 +7,5 @@ output "request_authorizer_lambda_invoke_arn" {
 }
 
 output "request_authorizer_iam_role_arn" {
-  value = aws_iam_role.request_authorizer.arn
+  value = aws_iam_role.request_authorizer_role.arn
 }

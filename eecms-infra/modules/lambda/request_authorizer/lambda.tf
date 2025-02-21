@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "request_authorizer" {
   function_name    = "request_authorizer"
-  role            = aws_iam_role.request_authorizer.arn
+  role            = aws_iam_role.request_authorizer_role.arn
   runtime         = "python3.8"
   handler         = "request_authorizer.lambda_handler"
   source_code_hash = data.archive_file.request_authorizer_zip.output_base64sha256

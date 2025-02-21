@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "postgres_db_exporter" {
   function_name    = "postgres_db_exporter"
-  role            = aws_iam_role.postgres_db_exporter.arn
+  role            = aws_iam_role.postgres_db_exporter_role.arn
   runtime         = "python3.8"
   handler         = "postgres_db_exporter.lambda_handler"
   source_code_hash = data.archive_file.postgres_db_exporter_zip.output_base64sha256
@@ -9,7 +9,7 @@ resource "aws_lambda_function" "postgres_db_exporter" {
 
   environment {
     variables = {
-      DB_HOST     = "pgsql.cr66uewyk9gp.eu-central-1.rds.amazonaws.com"
+      DB_HOST     = "pgsql.cr66uewyk9gp.eu-central-1.rds.amazonaws.com"//TODO
       DB_NAME     = "pgsql"
       DB_USER     = "db_admin"
       DB_PASSWORD = "dipl_rad_31"
@@ -17,8 +17,8 @@ resource "aws_lambda_function" "postgres_db_exporter" {
   }
 
    vpc_config {
-    subnet_ids         = [var.private_subnet_1_id, var.private_subnet_2_id]//TODO istovremeno dodati oba polja
-    security_group_ids = [aws_security_group.postgres_db_exporter_sg.id] //TODO ne kreira se odma zbod vpc_id
+    subnet_ids         = [var.private_subnet_1_id, var.private_subnet_2_id]
+    security_group_ids = [aws_security_group.postgres_db_exporter_sg.id]
   }
 }
 
@@ -31,7 +31,7 @@ data "archive_file" "postgres_db_exporter_zip" {
 #SG
 resource "aws_security_group" "postgres_db_exporter_sg" {
   name_prefix = "postgres_db_exporter_sg"
-  vpc_id      = var.vpc_id//TODO VPC ID
+  vpc_id      = var.vpc_id
 
   egress {
     from_port = 0

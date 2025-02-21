@@ -1,5 +1,5 @@
-resource "aws_iam_role" "postgres_db_exporter" {
-  name = "postgres_db_exporter"
+resource "aws_iam_role" "postgres_db_exporter_role" {
+  name = "postgres_db_exporter_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -13,15 +13,15 @@ resource "aws_iam_role" "postgres_db_exporter" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "postgres_db-attach" {
-  role       = aws_iam_role.postgres_db_exporter.name
+resource "aws_iam_role_policy_attachment" "postgres_db_exporter_vpc_role_policy_attachment" {
+  role       = aws_iam_role.postgres_db_exporter_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "postgres_db_exporter_basic_execution" {
-  role = aws_iam_role.postgres_db_exporter.name
+resource "aws_iam_role_policy_attachment" "postgres_db_exporter_basic_execution_role_policy_attachment" {
+  role = aws_iam_role.postgres_db_exporter_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  depends_on = [aws_iam_role.postgres_db_exporter]
+  depends_on = [aws_iam_role.postgres_db_exporter_role]
 }
 
 resource "aws_iam_policy" "postgres_db_exporter_logging_policy" {
@@ -42,17 +42,13 @@ resource "aws_iam_policy" "postgres_db_exporter_logging_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "postgres_db_exporter_logging_policy_attachment" {
-  role = aws_iam_role.postgres_db_exporter.id
+  role = aws_iam_role.postgres_db_exporter_role.id
   policy_arn = aws_iam_policy.postgres_db_exporter_logging_policy.arn
 }
 
-
-
-//------------------------------------------------------
-
-resource "aws_iam_role_policy" "postgres_db_exporter_policy" {
-  name = "LambdaRDSPolicy"
-  role = aws_iam_role.postgres_db_exporter.id
+resource "aws_iam_role_policy" "postgres_db_exporter_rds_role_policy" {
+  name = "postgres_db_exporter_rds_role_policy"
+  role = aws_iam_role.postgres_db_exporter_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -87,7 +83,5 @@ resource "aws_iam_policy" "postgres_db_exporter_s3_policy" {
 
 resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
   policy_arn = aws_iam_policy.postgres_db_exporter_s3_policy.arn
-  role       = aws_iam_role.postgres_db_exporter.name
+  role       = aws_iam_role.postgres_db_exporter_role.name
 }
-
-
