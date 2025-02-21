@@ -1,5 +1,5 @@
-resource "aws_sfn_state_machine" "consumption_data_pipeline" {
-  name     = "consumption_data_pipeline"
+resource "aws_sfn_state_machine" "consumption_data_pipeline_state_machine" {
+  name     = "consumption_data_pipeline_state_machine"
   role_arn = aws_iam_role.step_function_role.arn
 
   definition = jsonencode({

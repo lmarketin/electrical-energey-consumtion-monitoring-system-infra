@@ -12,7 +12,7 @@ module "ecr" {
 
 module "ecs" {
   source = "./modules/ecs"
-  ecr_repo_url = module.ecr.ecr_repo_url
+  eecss_repo_url = module.ecr.eecss_repo_url
   region = "eu-central-1"
   vpc_id = module.vpc.vpc_id
   private_subnet_1_id = module.vpc.private_subnet_1_id
@@ -71,7 +71,7 @@ module "enricher_lambda" {
 
 module "alerting_lambda" {
   source   = "./modules/lambda/not_received_consumption_data_alert"
-  sns_topic_email_arn = module.sns.sqs_topic_email_arn
+  sns_topic_email_arn = module.sns.sns_topic_email_arn
   sqs_alerting_queue_arn = module.sqs.sqs_alerting_queue_arn
 }
 
@@ -92,5 +92,5 @@ module "step_function" {
 
 module "cloudwatch" {
   source   = "./modules/cloudwatch"
-  consumption_data_pipeline_arn = module.step_function.consumption_data_pipeline_arn
+  consumption_data_pipeline_state_machine_arn = module.step_function.consumption_data_pipeline_state_machine_arn
 }

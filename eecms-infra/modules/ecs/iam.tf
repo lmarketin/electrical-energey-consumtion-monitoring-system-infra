@@ -1,9 +1,9 @@
-resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name                  = "test-app-ecsTaskExecutionRole"
-  assume_role_policy    = data.aws_iam_policy_document.assume_role_policy.json
+resource "aws_iam_role" "eecss_ecs_task_execution_role" {
+  name                  = "eecss_ecs_task_execution_role"
+  assume_role_policy    = data.aws_iam_policy_document.eecss_ecs_policy_document.json
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
+data "aws_iam_policy_document" "eecss_ecs_policy_document" {
   statement {
     actions               = ["sts:AssumeRole"]
 
@@ -14,22 +14,22 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role                  = aws_iam_role.ecsTaskExecutionRole.name
+resource "aws_iam_role_policy_attachment" "eecss_ecs_task_execution_role_policy_attachment" {
+  role                  = aws_iam_role.eecss_ecs_task_execution_role.name
   policy_arn            = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role" "ecsTaskRole" {
-  name                  = "ecsTaskRole"
-  assume_role_policy    = data.aws_iam_policy_document.assume_role_policy.json
+/*resource "aws_iam_role" "eecss_ecs_dynamodb_role" {
+  name                  = "eecss_ecs_dynamodb_role"
+  assume_role_policy    = data.aws_iam_policy_document.eecss_ecs_policy_document.json
 }
 
-resource "aws_iam_role_policy_attachment" "ecsTaskRole_policy" {
-  role                  = aws_iam_role.ecsTaskRole.name
+resource "aws_iam_role_policy_attachment" "eecss_ecs_dynamodb_role_policy_attachment" {
+  role                  = aws_iam_role.eecss_ecs_dynamodb_role.name
   policy_arn            = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-}
+}*/
 
-resource "aws_iam_policy" "ecs_task_policy" {
+resource "aws_iam_policy" "eecss_ecs_logs_policy" {
   name        = "ecs-task-policy"
   description = "Allow ECS task to write to CloudWatch logs"
   policy      = jsonencode({
@@ -41,7 +41,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
           "logs:PutLogEvents"
         ]
         Effect   = "Allow"
-        Resource = "${aws_cloudwatch_log_group.ecs_log_group.arn}:*"
+        Resource = "${aws_cloudwatch_log_group.eecss_cluster_log_group.arn}:*"
       }
     ]
   })

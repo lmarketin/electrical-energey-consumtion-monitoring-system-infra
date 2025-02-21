@@ -1,12 +1,12 @@
-resource "aws_cloudwatch_event_rule" "postgres_db_exporter_schedule_rule" {
-  name                = "postgres_db_exporter_schedule_rule"
-  schedule_expression = "cron(57 19 * * ? *)"
+resource "aws_cloudwatch_event_rule" "consumption_data_pipeline_event_rule" {
+  name                = "consumption_data_pipeline_event_rule"
+  schedule_expression = "cron(42 15 * * ? *)"
 }
 
-resource "aws_cloudwatch_event_target" "postgres_db_exporter_target" {
-  rule      = aws_cloudwatch_event_rule.postgres_db_exporter_schedule_rule.name
-  arn       = var.consumption_data_pipeline_arn
-  role_arn  = aws_iam_role.cloudwatch_trigger_step_function_role.arn
+resource "aws_cloudwatch_event_target" "consumption_data_pipeline_event_target" {
+  rule      = aws_cloudwatch_event_rule.consumption_data_pipeline_event_rule.name
+  arn       = var.consumption_data_pipeline_state_machine_arn
+  role_arn  = aws_iam_role.consumption_data_pipeline_event_role.arn
 }
 
 

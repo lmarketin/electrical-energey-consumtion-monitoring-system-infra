@@ -1,4 +1,4 @@
-variable "ecr_repo_url" {
+variable "eecss_repo_url" {
   type = string
 }
 

@@ -1,18 +1,13 @@
-resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "ecs_cluster"
+resource "aws_ecs_cluster" "eecss_cluster" {
+  name = "eecss_cluster"
 }
 
-resource "aws_cloudwatch_log_group" "ecs_log_group" {
-  name              = "/aws/ecs/eecms"
-  retention_in_days = 5
-}
-
-resource "aws_ecs_task_definition" "task_definition" {
-  family                = "ecs-task"
+resource "aws_ecs_task_definition" "eecss_task_definition" {
+  family                = "eecss_task_definition"
   container_definitions = jsonencode([
     {
       name        = "app-container"
-      image       = "${var.ecr_repo_url}:latest"
+      image       = "${var.eecss_repo_url}:latest"
       essential   = true
       networkMode = "awsvpc"
       entryPoint  = []
@@ -27,7 +22,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_log_group.name
+          "awslogs-group"         = aws_cloudwatch_log_group.eecss_cluster_log_group.name
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs-service-"
         }
@@ -62,14 +57,14 @@ resource "aws_ecs_task_definition" "task_definition" {
   network_mode                        = "awsvpc"
   cpu                                 = "256"
   memory                              = "512"
-  execution_role_arn                  = aws_iam_role.ecsTaskExecutionRole.arn
-  task_role_arn                       = aws_iam_role.ecsTaskRole.arn
+  execution_role_arn                  = aws_iam_role.eecss_ecs_task_execution_role.arn
+  //task_role_arn                       = aws_iam_role.eecss_ecs_dynamodb_role.arn
 }
 
-resource "aws_ecs_service" "ecs_service" {
-  name                              = "ecs-service"
-  cluster                           = aws_ecs_cluster.ecs_cluster.arn
-  task_definition                   = aws_ecs_task_definition.task_definition.arn
+resource "aws_ecs_service" "eecss_service" {
+  name                              = "eecss_service"
+  cluster                           = aws_ecs_cluster.eecss_cluster.arn
+  task_definition                   = aws_ecs_task_definition.eecss_task_definition.arn
   launch_type                       = "FARGATE"
   scheduling_strategy               = "REPLICA"
   desired_count                     = 2
@@ -100,12 +95,12 @@ resource "aws_security_group" "ecs_sg" {
   revoke_rules_on_delete      = true
 }
 
-resource "aws_security_group_rule" "ecs_alb_ingress" {
+resource "aws_security_group_rule" "ecs_lb_ingress" {
   type                        = "ingress"
   from_port                   = 0
   to_port                     = 0
   protocol                    = "-1"
-  description                 = "Allow inbound traffic from ALB"
+  description                 = "Allow inbound traffic from LB"
   security_group_id           = aws_security_group.ecs_sg.id
   source_security_group_id    = var.alb_sg_id
 }

@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "cloudwatch_trigger_step_function_document" {
+data "aws_iam_policy_document" "consumption_data_pipeline_event_policy_document" {
   statement {
     actions = [
       "sts:AssumeRole"
@@ -14,16 +14,16 @@ data "aws_iam_policy_document" "cloudwatch_trigger_step_function_document" {
   }
 }
 
-resource "aws_iam_role" "cloudwatch_trigger_step_function_role" {
-  name               = "cloudwatch_trigger_step_function_role"
-  assume_role_policy = data.aws_iam_policy_document.cloudwatch_trigger_step_function_document.json
+resource "aws_iam_role" "consumption_data_pipeline_event_role" {
+  name               = "consumption_data_pipeline_event_role"
+  assume_role_policy = data.aws_iam_policy_document.consumption_data_pipeline_event_policy_document.json
 }
 
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role_policy" "cloudwatch_trigger_step_function_policy" {
   name = "cloudwatch_trigger_step_function_policy"
-  role = aws_iam_role.cloudwatch_trigger_step_function_role.id
+  role = aws_iam_role.consumption_data_pipeline_event_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
