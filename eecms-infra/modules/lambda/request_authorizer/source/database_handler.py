@@ -13,7 +13,7 @@ class DatabaseHandler:
         self.dynamodb_client = boto3.resource('dynamodb', region_name=region)
 
     def get_customer_by_billing_metering_point_number(self, billing_metering_point_number):
-        logger.info(f"Fetching customer info with billing_metering_point_number:{billing_metering_point_number}")
+        logger.info(f"Fetching info for customer with billing_metering_point_number:{billing_metering_point_number}")
         result = self.dynamodb_client.Table(DB_TABLE_NAME).get_item(
             Key={
                 DB_COLUMN_NAME: int(billing_metering_point_number)

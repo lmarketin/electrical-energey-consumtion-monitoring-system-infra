@@ -58,9 +58,7 @@ class ConsumptionDatEnricher:
 
             for row in rows[1:]:
                 billing_metering_point_number = row[1]
-                logger.info(f"==== billing_metering_point_number:{billing_metering_point_number}")
                 dynamo_data = dynamo_data_map.get(int(billing_metering_point_number), {})
-                logger.info(f"==== dynamo_data:{dynamo_data}")
                 customer_type = dynamo_data.get('type', 'default_value')
                 should_send_network_quality_parameters = dynamo_data.get('should_send_network_quality_parameters', 'default_value')
                 active = dynamo_data.get('active', 'default_value')

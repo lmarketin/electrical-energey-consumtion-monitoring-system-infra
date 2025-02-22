@@ -33,9 +33,6 @@ resource "aws_dynamodb_table" "customers" {
 "active": {
 "BOOL": ""
 },
-"should_send_network_quality_parameters": {
-"BOOL": ""
-},
 "name": {
 "S": ""
 },

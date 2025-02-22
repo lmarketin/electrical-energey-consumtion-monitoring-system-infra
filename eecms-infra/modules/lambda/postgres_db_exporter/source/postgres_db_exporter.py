@@ -21,7 +21,11 @@ def lambda_handler(event, context):
         )
         cursor = connection.cursor()
 
-        query = "SELECT * FROM energy_consumption;"
+        query = (
+            "SELECT * FROM energy_consumption "
+            "WHERE sample_time >= CURRENT_DATE - INTERVAL '1 day' "
+            "AND sample_time < CURRENT_DATE;"
+        )
         cursor.execute(query)
 
         rows = cursor.fetchall()
@@ -37,7 +41,6 @@ def lambda_handler(event, context):
 
         output.seek(0)
 
-        current_date = datetime.now().strftime("%Y-%m-%d")
         yesterday_date = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
         export_name = f"export-{yesterday_date}"
 

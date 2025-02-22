@@ -31,7 +31,7 @@ class RequestAuthorizer:
 
     def authorize_request(self, health_check, billing_metering_point_number, x_api_key):
         if health_check:
-            return self.generate_policy("Authorized", "Allow")#TODO
+            return self.generate_policy("Authorized", "Allow")
 
         try:
             customer_info = (self.database_handler
