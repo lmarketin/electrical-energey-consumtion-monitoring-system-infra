@@ -9,4 +9,4 @@ class CustomerType(Enum):
 
     @staticmethod
     def get_types_that_require_parameters():
-        return {CustomerType.HHP.value, CustomerType.I.value, CustomerType.C.value, CustomerType.P.value}
+        return {CustomerType.HHP.name, CustomerType.I.name, CustomerType.C.name, CustomerType.P.name}

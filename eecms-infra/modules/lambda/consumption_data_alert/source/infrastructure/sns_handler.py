@@ -18,4 +18,4 @@ class SnsHandler:
         )
 
         logger.info(f"SNS message sent to topic: {sns_topic_arn}"
-                    f"MessageId: {response['MessageId']}, Subject:{subject} ,Message: {message}")
+                    f"MessageId: {response['MessageId']}, Subject:{subject} , Message: {message}")

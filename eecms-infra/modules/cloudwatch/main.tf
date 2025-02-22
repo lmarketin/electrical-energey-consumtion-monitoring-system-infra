@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_event_rule" "consumption_data_pipeline_event_rule" {
   name                = "consumption_data_pipeline_event_rule"
-  schedule_expression = "cron(42 15 * * ? *)"
+  schedule_expression = "cron(27 10 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "consumption_data_pipeline_event_target" {

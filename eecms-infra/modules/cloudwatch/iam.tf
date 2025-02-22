@@ -33,7 +33,7 @@ resource "aws_iam_role_policy" "cloudwatch_trigger_step_function_policy" {
           "states:StartExecution"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:states:${var.region}:${data.aws_caller_identity.current.account_id}:stateMachine:consumption_data_pipeline"
+        Resource = "arn:aws:states:${var.region}:${data.aws_caller_identity.current.account_id}:stateMachine:consumption_data_pipeline_state_machine"#TODO
       }
     ]
   })
