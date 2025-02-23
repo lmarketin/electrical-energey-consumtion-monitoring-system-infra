@@ -73,6 +73,11 @@ module "alerting_lambda" {
   source                 = "./modules/lambda/consumption_data_alert"
   sns_topic_email_arn    = module.sns.sns_topic_email_arn
   sqs_alerting_queue_arn = module.sqs.sqs_alerting_queue_arn
+  dynamodb_table         = module.dynamodb.customers_table_name
+  queue_url              = module.sqs.sqs_alerting_queue_name
+  region                 = "eu-central-1"
+  sns_topic_arn          = module.sns.sns_topic_email_arn
+  source_bucket          = module.s3.postgres_db_consumption_data_exports_bucket_domain_name
 }
 
 module "sns" {

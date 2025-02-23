@@ -9,13 +9,12 @@ resource "aws_lambda_function" "consumption_data_alert" {
 
   environment {
     variables = {
-      DYNAMO_DB_TABLE = "customers",#TODO
-      FUNCTION_NAME   = "consumption_data_alert",
-      DEFAULT_REGION  = "eu-central-1",
-      SOURCE_BUCKET   = "postgres-db-consumption-data-exports-bucket",
-      SNS_TOPIC_ARN   = "arn:aws:sns:eu-central-1:820242920924:admin_email_topic",
-      QUEUE_URL       = "https://sqs.eu-central-1.amazonaws.com/820242920924/alerting_queue" #TODO
-
+      DYNAMO_DB_TABLE = var.dynamodb_table
+      FUNCTION_NAME   = "consumption_data_alert"
+      DEFAULT_REGION  = var.region
+      SOURCE_BUCKET   = var.source_bucket
+      SNS_TOPIC_ARN   = var.sns_topic_arn
+      QUEUE_URL       = var.queue_url
     }
   }
 }
