@@ -1,10 +1,11 @@
 import boto3
 import logging
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-SOURCE_BUCKET = 'postgres-db-consumption-data-exports-bucket'
+SOURCE_BUCKET = os.getenv('SOURCE_BUCKET')
 
 class S3Handler:
 

@@ -3,6 +3,7 @@ import io
 import datetime
 import logging
 import sys
+import os
 
 sys.path.append('../application')
 sys.path.append('../domain')
@@ -13,11 +14,10 @@ from application.submitted_network_parameters_alert_service import SubmittedNetw
 from infrastructure.s3_handler import S3Handler
 from infrastructure.database_handler import DatabaseHandler
 
-DYNAMO_DB_TABLE = 'customers'
-FUNCTION_NAME   = 'NOT_RECEIVED_CONSUMPTION_DATA_ALERT'# TODO
-DEFAULT_REGION  = "eu-central-1"
+FUNCTION_NAME   = os.getenv('FUNCTION_NAME')
+DEFAULT_REGION  = os.getenv('DEFAULT_REGION')
 
-SOURCE_BUCKET = 'postgres-db-consumption-data-exports-bucket'
+SOURCE_BUCKET = os.getenv('SOURCE_BUCKET')
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

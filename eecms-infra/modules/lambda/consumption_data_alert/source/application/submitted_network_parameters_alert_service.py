@@ -9,9 +9,6 @@ from domain.customer_error_type import CustomerErrorType
 from domain.customer_type import CustomerType
 from util.messaging_util import MessagingUtil
 
-SNS_TOPIC_ARN = 'arn:aws:sns:eu-central-1:820242920924:admin_email_topic' #TODO os.getenv("SNS_TOPIC_ARN")
-QUEUE_URL     = 'https://sqs.eu-central-1.amazonaws.com/820242920924/alerting_queue' #TODO
-
 BILLING_METERING_COLUMN_NUMBER  = 1
 AVERAGE_VOLTAGE_COLUMN_NUMBER   = 4
 AVERAGE_FREQUENCY_COLUMN_NUMBER = 5
@@ -47,7 +44,5 @@ class SubmittedNetworkParametersAlertService:
             logger.info(f"All customers who needed to send network parameters have sent them for date:{date_str}")
             return
 
-        self.messaging_util.publish_sns_message(SNS_TOPIC_ARN, customer_error_type, customers_who_not_submitted_params_but_should, date_str)
-        self.messaging_util.send_messages_to_sqs(QUEUE_URL, customer_error_type, customers_who_not_submitted_params_but_should, date_str)
-
-
+        self.messaging_util.publish_sns_message(customer_error_type, customers_who_not_submitted_params_but_should, date_str)
+        self.messaging_util.send_messages_to_sqs(customer_error_type, customers_who_not_submitted_params_but_should, date_str)
