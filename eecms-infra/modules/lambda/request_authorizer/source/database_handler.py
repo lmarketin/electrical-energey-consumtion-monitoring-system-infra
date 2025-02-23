@@ -1,7 +1,9 @@
 import boto3
 import logging
+import os
 
-DB_TABLE_NAME = 'customers'
+DB_TABLE_NAME = os.getenv('DYNAMO_DB_TABLE')
+
 DB_COLUMN_NAME = 'billing_metering_point_number'
 
 logger = logging.getLogger()

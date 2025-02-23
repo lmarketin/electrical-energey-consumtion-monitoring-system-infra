@@ -3,15 +3,16 @@ import csv
 import io
 import datetime
 import logging
+import os
 
 from database_handler import DatabaseHandler
 
-DYNAMO_DB_TABLE = 'customers'
-FUNCTION_NAME   = 'CONSUMPTION_DATA_ENRICHER'# TODO
-DEFAULT_REGION = "eu-central-1"
+DYNAMO_DB_TABLE = os.getenv('DYNAMO_DB_TABLE')
+FUNCTION_NAME   = os.getenv('FUNCTION_NAME')
+DEFAULT_REGION = os.getenv('DEFAULT_REGION')
 
-SOURCE_BUCKET = 'postgres-db-consumption-data-exports-bucket'
-DESTINATION_BUCKET = 'enriched-consumption-data-bucket'
+SOURCE_BUCKET = os.getenv('SOURCE_BUCKET')
+DESTINATION_BUCKET = os.getenv('DESTINATION_BUCKET')
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

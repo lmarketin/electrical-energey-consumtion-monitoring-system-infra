@@ -1,11 +1,12 @@
 import logging
+import os
 
 from database_handler import DatabaseHandler, NoCustomerInDBException
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-DEFAULT_REGION = "eu-central-1"
+DEFAULT_REGION = os.getenv('DEFAULT_REGION')
 
 
 def lambda_handler(event, context):

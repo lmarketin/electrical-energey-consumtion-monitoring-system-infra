@@ -9,10 +9,11 @@ resource "aws_lambda_function" "postgres_db_exporter" {
 
   environment {
     variables = {
-      DB_HOST     = "pgsql.cr66uewyk9gp.eu-central-1.rds.amazonaws.com"//TODO
-      DB_NAME     = "pgsql"
-      DB_USER     = "db_admin"
-      DB_PASSWORD = "dipl_rad_31"
+      DB_HOST            = var.db_host
+      DB_NAME            = var.db_name
+      DB_USER            = var.db_user
+      DB_PASSWORD        = var.db_password
+      DESTINATION_BUCKET = var.destination_bucket
     }
   }
 
@@ -40,5 +41,3 @@ resource "aws_security_group" "postgres_db_exporter_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-

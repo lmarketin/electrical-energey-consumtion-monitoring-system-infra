@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-central-1"
+  region = var.region
 }
 
 module "vpc" {
@@ -13,7 +13,7 @@ module "ecr" {
 module "ecs" {
   source              = "./modules/ecs"
   eecss_repo_url      = module.ecr.eecss_repo_url
-  region              = "eu-central-1"
+  region              = var.region
   vpc_id              = module.vpc.vpc_id
   private_subnet_1_id = module.vpc.private_subnet_1_id
   private_subnet_2_id = module.vpc.private_subnet_2_id
@@ -40,7 +40,9 @@ module "api_gateway" {
 }
 
 module "request_authorizer_lambda" {
-  source   = "./modules/lambda/request_authorizer"
+  source         = "./modules/lambda/request_authorizer"
+  dynamodb_table = module.dynamodb.customers_table_name
+  region         = var.region
 }
 
 module "alb" {
@@ -63,10 +65,19 @@ module "exporter_lambda" {
   vpc_id              = module.vpc.vpc_id
   private_subnet_1_id = module.vpc.private_subnet_1_id
   private_subnet_2_id = module.vpc.private_subnet_2_id
+  db_host             = module.rds.pgsql_endpoint
+  db_name             = var.db_name
+  db_password         = var.db_password
+  db_user             = var.db_user
+  destination_bucket  = module.s3.postgres_db_consumption_data_exports_bucket_name
 }
 
 module "enricher_lambda" {
-  source = "./modules/lambda/consumption_data_enricher"
+  source             = "./modules/lambda/consumption_data_enricher"
+  destination_bucket = module.s3.enriched-consumption-data-bucket_name
+  dynamodb_table     = module.dynamodb.customers_table_name
+  region             = var.region
+  source_bucket      = module.s3.postgres_db_consumption_data_exports_bucket_name
 }
 
 module "alerting_lambda" {
@@ -75,9 +86,9 @@ module "alerting_lambda" {
   sqs_alerting_queue_arn = module.sqs.sqs_alerting_queue_arn
   dynamodb_table         = module.dynamodb.customers_table_name
   queue_url              = module.sqs.sqs_alerting_queue_name
-  region                 = "eu-central-1"
+  region                 = var.region
   sns_topic_arn          = module.sns.sns_topic_email_arn
-  source_bucket          = module.s3.postgres_db_consumption_data_exports_bucket_domain_name
+  source_bucket          = module.s3.postgres_db_consumption_data_exports_bucket_name
 }
 
 module "sns" {
