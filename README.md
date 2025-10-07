@@ -1,4 +1,5 @@
-![Screenshot 2025-02-14 at 03 30 08](https://github.com/user-attachments/assets/f85746fa-520a-4cd7-9709-4ec4792431b2)
+<img width="1524" height="1204" alt="image" src="https://github.com/user-attachments/assets/9b78406f-6ac5-454e-84eb-42e83593cf1a" />
+
 
 
 **Electrical Energy Consumption Monitoring System Infrastructure**
