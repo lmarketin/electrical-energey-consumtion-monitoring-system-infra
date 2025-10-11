@@ -1,4 +1,4 @@
-variable "eecss_repo_url" {
+variable "eecms_repo_url" {
   type = string
 }
 
@@ -15,7 +15,7 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  default = "dipl_rad_31"
+  default = "db_password"
 }
 
 variable "vpc_id" {
@@ -41,5 +41,3 @@ variable "lb_target_group_arn" {
 variable "lb_listener" {
   type = string
 }
-
-

@@ -1,13 +1,13 @@
-resource "aws_ecs_cluster" "eecss_cluster" {
-  name = "eecss_cluster"
+resource "aws_ecs_cluster" "eecms_cluster" {
+  name = "eecms_cluster"
 }
 
-resource "aws_ecs_task_definition" "eecss_task_definition" {
-  family                = "eecss_task_definition"
+resource "aws_ecs_task_definition" "eecms_task_definition" {
+  family                = "eecms_task_definition"
   container_definitions = jsonencode([
     {
       name        = "app-container"
-      image       = "${var.eecss_repo_url}:latest"
+      image       = "${var.eecms_repo_url}:latest"
       essential   = true
       networkMode = "awsvpc"
       entryPoint  = []
@@ -22,7 +22,7 @@ resource "aws_ecs_task_definition" "eecss_task_definition" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.eecss_cluster_log_group.name
+          "awslogs-group"         = aws_cloudwatch_log_group.eecms_cluster_log_group.name
           "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs-service-"
         }
@@ -57,17 +57,16 @@ resource "aws_ecs_task_definition" "eecss_task_definition" {
   network_mode                        = "awsvpc"
   cpu                                 = "256"
   memory                              = "512"
-  execution_role_arn                  = aws_iam_role.eecss_ecs_task_execution_role.arn
-  //task_role_arn                       = aws_iam_role.eecss_ecs_dynamodb_role.arn
+  execution_role_arn                  = aws_iam_role.eecms_ecs_task_execution_role.arn
 }
 
-resource "aws_ecs_service" "eecss_service" {
-  name                              = "eecss_service"
-  cluster                           = aws_ecs_cluster.eecss_cluster.arn
-  task_definition                   = aws_ecs_task_definition.eecss_task_definition.arn
+resource "aws_ecs_service" "eecms_service" {
+  name                              = "eecms_service"
+  cluster                           = aws_ecs_cluster.eecms_cluster.arn
+  task_definition                   = aws_ecs_task_definition.eecms_task_definition.arn
   launch_type                       = "FARGATE"
   scheduling_strategy               = "REPLICA"
-  desired_count                     = 2
+  desired_count                     = 1
   health_check_grace_period_seconds = 12000
 
   network_configuration {
@@ -84,6 +83,48 @@ resource "aws_ecs_service" "eecss_service" {
   depends_on = [var.lb_listener]
 }
 
+resource "aws_appautoscaling_target" "ecs_autoscaling" {
+  max_capacity       = 4
+  min_capacity       = 1
+  resource_id        = "service/${aws_ecs_cluster.eecms_cluster.name}/${aws_ecs_service.eecms_service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+
+  depends_on = [
+    null_resource.aws_ecs_cluster_exists,
+    null_resource.aws_ecs_service_exists
+  ]
+}
+
+resource "aws_appautoscaling_policy" "ecs_autoscaling" {
+  name               = "ecs_autoscaling"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_autoscaling.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_autoscaling.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_autoscaling.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value       = 75
+    scale_in_cooldown  = 120
+    scale_out_cooldown = 60
+  }
+}
+
+resource "null_resource" "aws_ecs_cluster_exists" {
+  triggers = {
+    aws_ecs_cluster_exists_arn = aws_ecs_cluster.eecms_cluster.arn
+  }
+}
+
+resource "null_resource" "aws_ecs_service_exists" {
+  triggers = {
+    aws_ecs_service_exists_id = aws_ecs_service.eecms_service.id
+  }
+}
 
 # ------------------------------------------------------------------------------
 # Security Group and Rules for ECS app

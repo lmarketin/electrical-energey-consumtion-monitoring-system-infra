@@ -26,7 +26,7 @@ resource "aws_iam_role_policy_attachment" "consumption_data_alert_basic_executio
 
 #Logging
 resource "aws_iam_policy" "consumption_data_alert_logging_policy" {
-  name   = "not_received_consumption_data_alert_logging_policy"
+  name   = "consumption_data_alert_logging_policy"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -42,7 +42,7 @@ resource "aws_iam_policy" "consumption_data_alert_logging_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "not_received_consumption_data_alert_logging_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "consumption_data_alert_logging_policy_attachment" {
   role = aws_iam_role.consumption_data_alert_role.id
   policy_arn = aws_iam_policy.consumption_data_alert_logging_policy.arn
 }
@@ -59,7 +59,7 @@ resource "aws_iam_policy" "consumption_data_alert_dynamo_db_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "not_received_consumption_data_alert_dynamo_db_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "consumption_data_alert_dynamo_db_policy_attachment" {
   role = aws_iam_role.consumption_data_alert_role.id
   policy_arn = aws_iam_policy.consumption_data_alert_dynamo_db_policy.arn
 }
@@ -89,14 +89,14 @@ resource "aws_iam_policy" "consumption_data_alert_s3_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "not_received_consumption_data_alert_s3_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "consumption_data_alert_s3_policy_attachment" {
   role       = aws_iam_role.consumption_data_alert_role.name
   policy_arn = aws_iam_policy.consumption_data_alert_s3_policy.arn
 }
 
 #SNS
 resource "aws_iam_policy" "consumption_data_alert_sns_policy" {
-  name        = "not_received_consumption_data_alert_sns_policy"
+  name        = "consumption_data_alert_sns_policy"
   description = ""
   policy      = jsonencode({
     Version = "2012-10-17"
@@ -112,7 +112,7 @@ resource "aws_iam_policy" "consumption_data_alert_sns_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "not_received_consumption_data_alert_sns_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "consumption_data_alert_sns_policy_attachment" {
   role       = aws_iam_role.consumption_data_alert_role.name
   policy_arn = aws_iam_policy.consumption_data_alert_sns_policy.arn
 }
@@ -131,7 +131,7 @@ resource "aws_iam_policy" "consumption_data_alert_sqs_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "not_received_consumption_data_alert_sqs_attach" {
+resource "aws_iam_role_policy_attachment" "consumption_data_alert_sqs_attach" {
   role       = aws_iam_role.consumption_data_alert_role.name
   policy_arn = aws_iam_policy.consumption_data_alert_sqs_policy.arn
 }

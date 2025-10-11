@@ -12,7 +12,7 @@ module "ecr" {
 
 module "ecs" {
   source              = "./modules/ecs"
-  eecss_repo_url      = module.ecr.eecss_repo_url
+  eecms_repo_url      = module.ecr.eecms_repo_url
   region              = var.region
   vpc_id              = module.vpc.vpc_id
   private_subnet_1_id = module.vpc.private_subnet_1_id
@@ -36,10 +36,10 @@ module "api_gateway" {
   private_subnet_1_id           = module.vpc.private_subnet_1_id
   private_subnet_2_id           = module.vpc.private_subnet_2_id
   lb_listener_arn               = module.alb.lb_listener_arn
-  request_authorizer_lambda_arn = module.request_authorizer_lambda.request_authorizer_lambda_arn
+  request_authorizer_lambda_arn = module.request_authorizer.request_authorizer_lambda_arn
 }
 
-module "request_authorizer_lambda" {
+module "request_authorizer" {
   source         = "./modules/lambda/request_authorizer"
   dynamodb_table = module.dynamodb.customers_table_name
   region         = var.region
@@ -103,7 +103,7 @@ module "step_function" {
   source              = "./modules/step_function"
   exporter_lambda_arn = module.exporter_lambda.postgres_db_exporter_lambda_arn
   enricher_lambda_arn = module.enricher_lambda.consumption_data_enricher_lambda_arn
-  alerting_lambda_arn = module.alerting_lambda.not_received_consumption_data_alert_lambda_arn
+  alerting_lambda_arn = module.alerting_lambda.consumption_data_alert_lambda_arn
 }
 
 module "cloudwatch" {

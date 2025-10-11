@@ -7,7 +7,7 @@ variable "db_name" {
 }
 
 variable "db_password" {
-  default = "dipl_rad_31"
+  default = "db_password"
 }
 
 variable "db_user" {

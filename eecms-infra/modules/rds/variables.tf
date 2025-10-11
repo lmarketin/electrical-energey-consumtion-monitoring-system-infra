@@ -26,7 +26,7 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  default = "dipl_rad_31"
+  default = "db_password"
 }
 
 variable "vpc_id" {
